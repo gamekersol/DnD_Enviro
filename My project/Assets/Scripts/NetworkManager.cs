@@ -65,6 +65,8 @@ public class NetworkManager : MonoBehaviour
         StartAsClient(ip, port);
     }
 
+    public void SendText(string text) => client.Send(new TextMessage(text));
+
     public void SetIp(string ip) => this.ip = ip;
 
     public void SetPort(string port) => this.port = Convert.ToUInt16(port);

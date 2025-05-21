@@ -10,7 +10,11 @@ public class Client
     {
         websocket = new WebSocket($"ws://{ip}:{port}");
 
-        websocket.OnOpen += () => Debug.Log("Connected to server");
+        websocket.OnOpen += () =>
+        {
+            Debug.Log("Connected to server");
+            Send(new TextMessage("Слава Україні"));
+        };
         websocket.OnError += (e) => Debug.LogError("Error: " + e);
         websocket.OnClose += (e) => Debug.Log("Disconnected from server");
 
@@ -34,11 +38,12 @@ public class Client
             await websocket.Close();
     }
 
-    public async void Send(string message)
+    public async void Send(MessageBase message)
     {
         if (websocket != null && websocket.State == WebSocketState.Open)
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(message);
+            string json = JsonUtility.ToJson(message);
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json);
             await websocket.Send(bytes);
         }
     }
